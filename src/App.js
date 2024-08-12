@@ -1,25 +1,24 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Banner from './components/Banner';
+import Dashboard from './components/Dashboard';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [bannerData, setBannerData] = useState({ description: '', timer: 0, link: '', visible: false });
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/banner').then(response => {
+      setBannerData(response.data);
+    });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Banner {...bannerData} />
+      <Dashboard onBannerUpdate={setBannerData} />
     </div>
   );
-}
+};
 
 export default App;
