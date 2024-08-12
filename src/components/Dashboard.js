@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './Dashboard.css';
 
 const Dashboard = ({ onBannerUpdate }) => {
   const [description, setDescription] = useState('');
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(10); // Default timer set to 10 seconds
   const [link, setLink] = useState('');
   const [visible, setVisible] = useState(false);
 
   const updateBanner = () => {
-    axios.post('http://localhost:5000/banner', {
-      description, timer, link, visible
-    }).then(response => {
-      onBannerUpdate(response.data);
-    });
+    const bannerData = { description, timer, link, visible };
+    axios.post('http://localhost:5000/banner', bannerData)
+      .then(response => {
+        onBannerUpdate(response.data);
+      });
   };
 
   return (

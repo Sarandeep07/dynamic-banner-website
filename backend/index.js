@@ -1,42 +1,41 @@
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2');
-
 const app = express();
+const port = 5000;
+const connection = require('./db'); // Import the database connection
+
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // Middleware to parse JSON requests
 
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'password',
-  database: 'bannerdb'
-});
-
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err);
-    return;
-  }
-  console.log('Connected to the MySQL database.');
-});
-
+// Fetch the latest banner data
 app.get('/banner', (req, res) => {
-  db.query('SELECT * FROM banner WHERE id = 1', (err, results) => {
-    if (err) throw err;
-    res.json(results[0]);
-  });
-});
-
-app.post('/banner', (req, res) => {
-  const { description, timer, link, visible } = req.body;
-  db.query('UPDATE banner SET description = ?, timer = ?, link = ?, visible = ? WHERE id = 1',
-    [description, timer, link, visible], (err) => {
-      if (err) throw err;
-      res.json({ description, timer, link, visible });
+    const sql = 'SELECT * FROM banner ORDER BY id DESC LIMIT 1';
+    connection.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching banner data:', err);
+            res.status(500).send('Server error');
+            return;
+        }
+        res.json(results[0]);
     });
 });
 
-app.listen(5000, () => {
-  console.log('Server running on port 5000');
+// Insert new banner data
+app.post('/banner', (req, res) => {
+    const { description, timer, link, visible } = req.body;
+    const sql = 'INSERT INTO banner (description, timer, link, visible) VALUES (?, ?, ?, ?)';
+
+    connection.query(sql, [description, timer, link, visible], (err, results) => {
+        if (err) {
+            console.error('Error inserting banner data:', err);
+            res.status(500).send('Server error');
+            return;
+        }
+        res.json({ id: results.insertId, ...req.body });
+    });
+});
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${3306}`);
 });

@@ -5,12 +5,17 @@ import Dashboard from './components/Dashboard';
 import './App.css';
 
 const App = () => {
-  const [bannerData, setBannerData] = useState({ description: '', timer: 0, link: '', visible: false });
+  const [bannerData, setBannerData] = useState({
+    description: '',
+    timer: 10, // Default timer value
+    link: '',
+    visible: false
+  });
 
   useEffect(() => {
-    axios.get('http://localhost:5000/banner').then(response => {
-      setBannerData(response.data);
-    });
+    axios.get('http://localhost:5000/banner')
+      .then(response => setBannerData(response.data))
+      .catch(error => console.log('Error fetching banner data:', error));
   }, []);
 
   return (

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './Banner.css';
 
 const Banner = ({ description, timer, link, visible }) => {
   const [countdown, setCountdown] = useState(timer);
@@ -19,7 +20,7 @@ const Banner = ({ description, timer, link, visible }) => {
     <div className="banner">
       <p>{description}</p>
       <p>Time left: {countdown}s</p>
-      <a href={link}>Learn More</a>
+      <a href={link} target="_blank" rel="noopener noreferrer">Learn More</a>
     </div>
   );
 };

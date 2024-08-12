@@ -1,0 +1,13 @@
+.banner {
+    background-color: #f0ad4e;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 5px;
+    color: #fff;
+  }
+  
+  .banner a {
+    color: #fff;
+    text-decoration: underline;
+  }
+  
